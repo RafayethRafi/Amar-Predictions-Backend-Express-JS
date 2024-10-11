@@ -3,7 +3,6 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -24,8 +23,5 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
-
-module.exports = { app };
+// Export the Express API
+module.exports = app;
