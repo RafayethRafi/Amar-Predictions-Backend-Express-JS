@@ -329,24 +329,32 @@ router.delete('/delete_league', auth, isAdmin, async (req, res) => {
   }
 });
 
-router.get('/league/:league_id', auth, async (req, res) => {
+router.get('/league/:league_id', async (req, res) => {
   const { league_id } = req.params;
-
+  
   try {
+    console.log(`Fetching league with ID: ${league_id}`);
+    
     const { data, error } = await supabase
       .from('leagues')
       .select('*')
       .eq('id', league_id)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
 
     if (!data) {
+      console.log(`No league found with ID: ${league_id}`);
       return res.status(404).json({ error: "League not found" });
     }
 
+    console.log('League data found:', data);
     res.status(200).json(data);
   } catch (error) {
+    console.error('Error in /league/:league_id route:', error);
     res.status(400).json({ error: error.message });
   }
 });
