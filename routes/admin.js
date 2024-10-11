@@ -170,7 +170,12 @@ router.post('/edit_cricket_review', auth, isAdmin, async (req, res) => {
 });
 
 router.post('/post_football_review', auth, isAdmin, async (req, res) => {
-  const { team1, team2, score1, score2, content, league_id } = req.body;
+  const { team1, team2, score1, score2, content } = req.body;
+  const league_id = req.query.league_id;  // Get league_id from query parameter
+
+  if (!league_id) {
+    return res.status(400).json({ error: 'League ID is required' });
+  }
 
   try {
     const { data, error } = await supabase
@@ -178,20 +183,25 @@ router.post('/post_football_review', auth, isAdmin, async (req, res) => {
       .insert([{
         team1, team2, score1, score2, content,
         user_id: req.user.id,
-        league_id
+        league_id: league_id  // Use league_id here
       }]);
 
     if (error) throw error;
 
-    res.status(201).json(data[0]);
+    res.status(201).json({ message: 'Review posted successfully' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
+
 router.post('/edit_football_review', auth, isAdmin, async (req, res) => {
   const { team1, team2, score1, score2, content } = req.body;
   const { review_id_to_edit } = req.query;
+
+  if (!review_id_to_edit) {
+    return res.status(400).json({ error: 'Review ID is required' });
+  }
 
   try {
     const { data, error } = await supabase
@@ -201,11 +211,12 @@ router.post('/edit_football_review', auth, isAdmin, async (req, res) => {
 
     if (error) throw error;
 
-    res.status(200).json(data[0]);
+    res.status(200).json({ message: "Review updated successfully" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
+
 
 router.get('/users', auth, isAdmin, async (req, res) => {
   const { skip = 0, limit = 10 } = req.query;
@@ -242,7 +253,7 @@ router.get('/cricket_reviews', async (req, res) => {
   }
 });
 
-router.get('/football_reviews', auth, isAdmin, async (req, res) => {
+router.get('/football_reviews', async (req, res) => {
   const { skip = 0, limit = 10 } = req.query;
 
   try {
@@ -260,6 +271,7 @@ router.get('/football_reviews', auth, isAdmin, async (req, res) => {
   }
 });
 
+
 router.post('/create_league', auth, isAdmin, async (req, res) => {
   const { name, sport_type } = req.body;
 
@@ -276,11 +288,33 @@ router.post('/create_league', auth, isAdmin, async (req, res) => {
   }
 });
 
-router.get('/leagues', async (req, res) => {
+router.get('/cricket_leagues', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('leagues')
-      .select('*');
+      .select('*')
+      .eq('sport_type', 'cricket');
+
+    if (error) throw error;
+
+    if (data.length === 0) {
+      return res.status(404).json({ error: "Leagues not found" });
+    }
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+
+router.get('/football_leagues', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('leagues')
+      .select('*')
+      .eq('sport_type', 'football');
+
 
     if (error) throw error;
 
@@ -415,7 +449,7 @@ router.get('/cricket_review/:review_id', async (req, res) => {
   }
 });
 
-router.get('/football_review/:review_id', auth, async (req, res) => {
+router.get('/football_review/:review_id', async (req, res) => {
   const { review_id } = req.params;
 
   try {
@@ -436,5 +470,6 @@ router.get('/football_review/:review_id', auth, async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
 
 module.exports = router;

@@ -1,11 +1,12 @@
+
 {
   "name": "express-supabase-api",
   "version": "1.0.0",
   "description": "Express.js API with Supabase",
-  "main": "api/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node api/index.js",
-    "dev": "bun run api/index.js",
+    "start": "node index.js",
+    "dev": "bun run index.js",
     "migrate": "node-pg-migrate",
     "migrate:up": "bun run migrate up",
     "migrate:down": "bun run migrate down"
