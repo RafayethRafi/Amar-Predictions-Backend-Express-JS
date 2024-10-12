@@ -237,11 +237,13 @@ router.get('/users', auth, isAdmin, async (req, res) => {
 
 router.get('/cricket_reviews', async (req, res) => {
   const { skip = 0, limit = 10 } = req.query;
+  const league_id = req.query.league_id;  // Get league_id from query parameter
 
   try {
     const { data, error, count } = await supabase
       .from('cricket_reviews')
       .select('*', { count: 'exact' })
+      .eq('league_id', league_id)  // Ensure league_id matches the query parameter
       .order('id', { ascending: false })
       .range(skip, skip + limit - 1);
 
@@ -255,11 +257,13 @@ router.get('/cricket_reviews', async (req, res) => {
 
 router.get('/football_reviews', async (req, res) => {
   const { skip = 0, limit = 10 } = req.query;
+  const league_id = req.query.league_id;  // Get league_id from query parameter
 
   try {
     const { data, error, count } = await supabase
       .from('football_reviews')
       .select('*', { count: 'exact' })
+      .eq('league_id', league_id)  // Ensure league_id matches the query parameter
       .order('id', { ascending: false })
       .range(skip, skip + limit - 1);
 
@@ -270,7 +274,6 @@ router.get('/football_reviews', async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
 
 router.post('/create_league', auth, isAdmin, async (req, res) => {
   const { name, sport_type } = req.body;
