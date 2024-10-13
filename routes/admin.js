@@ -126,7 +126,7 @@ router.post('/football_image_update', auth, isAdmin, upload.single('image'), asy
 
 
 router.post('/post_cricket_review', auth, isAdmin, async (req, res) => {
-  const { team1, team2, score1, score2, wicket1, wicket2, content } = req.body;
+  const { team1, team2, score1, score2, wicket1, wicket2, content,match_type } = req.body;
   const league_id = req.query.league_id;  // Get league_id from query parameter
 
   if (!league_id) {
@@ -137,7 +137,7 @@ router.post('/post_cricket_review', auth, isAdmin, async (req, res) => {
     const { data, error } = await supabase
       .from('cricket_reviews')
       .insert([{
-        team1, team2, score1, score2, wicket1, wicket2, content,
+        team1, team2, score1, score2, wicket1, wicket2, content,match_type,
         user_id: req.user.id,
         league_id: league_id  // Use league_id here
       }]);
@@ -152,13 +152,13 @@ router.post('/post_cricket_review', auth, isAdmin, async (req, res) => {
 
 
 router.post('/edit_cricket_review', auth, isAdmin, async (req, res) => {
-  const { team1, team2, score1, score2, wicket1, wicket2, content } = req.body;
+  const { team1, team2, score1, score2, wicket1, wicket2, content, match_type } = req.body;
   const { review_id_to_edit } = req.query;
 
   try {
     const { data, error } = await supabase
       .from('cricket_reviews')
-      .update({ team1, team2, score1, score2, wicket1, wicket2, content })
+      .update({ team1, team2, score1, score2, wicket1, wicket2, content,match_type })
       .eq('id', review_id_to_edit);
 
     if (error) throw error;
@@ -170,7 +170,7 @@ router.post('/edit_cricket_review', auth, isAdmin, async (req, res) => {
 });
 
 router.post('/post_football_review', auth, isAdmin, async (req, res) => {
-  const { team1, team2, score1, score2, content } = req.body;
+  const { team1, team2, score1, score2, content,match_type } = req.body;
   const league_id = req.query.league_id;  // Get league_id from query parameter
 
   if (!league_id) {
@@ -181,7 +181,7 @@ router.post('/post_football_review', auth, isAdmin, async (req, res) => {
     const { data, error } = await supabase
       .from('football_reviews')
       .insert([{
-        team1, team2, score1, score2, content,
+        team1, team2, score1, score2, content,match_type,
         user_id: req.user.id,
         league_id: league_id  // Use league_id here
       }]);
@@ -196,7 +196,7 @@ router.post('/post_football_review', auth, isAdmin, async (req, res) => {
 
 
 router.post('/edit_football_review', auth, isAdmin, async (req, res) => {
-  const { team1, team2, score1, score2, content } = req.body;
+  const { team1, team2, score1, score2, content,match_type } = req.body;
   const { review_id_to_edit } = req.query;
 
   if (!review_id_to_edit) {
@@ -206,7 +206,7 @@ router.post('/edit_football_review', auth, isAdmin, async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('football_reviews')
-      .update({ team1, team2, score1, score2, content })
+      .update({ team1, team2, score1, score2, content,match_type })
       .eq('id', review_id_to_edit);
 
     if (error) throw error;
