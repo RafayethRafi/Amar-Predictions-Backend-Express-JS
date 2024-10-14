@@ -31,6 +31,8 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const https = require('https');
+const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
@@ -41,7 +43,7 @@ const dataDir = path.join(__dirname, 'data');
 
 // CORS configuration
 const corsOptions = {
-  origin: '*',
+  origin: ['https://sports.amarpredictions.com', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -80,8 +82,15 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+// HTTPS configuration
+const httpsOptions = {
+  key: fs.readFileSync('/path/to/your/private-key.pem'),
+  cert: fs.readFileSync('/path/to/your/certificate.pem')
+};
+
+// Create HTTPS server
+https.createServer(httpsOptions, app).listen(port, () => {
+  console.log(`HTTPS Server running on port ${port}`);
 });
 
 module.exports = { app };
