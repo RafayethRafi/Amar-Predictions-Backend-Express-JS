@@ -46,12 +46,14 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+app.options('*', cors());
+
 app.use(express.json());
 
 // Serve static files from the data directory
 app.use('/data', express.static(dataDir));
 
-// Routes
+// Make sure this is placed BEFORE your routes
 app.use('/users', require('./routes/users'));
 app.use('/', require('./routes/auth'));
 app.use('/admin', require('./routes/admin'));
