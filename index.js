@@ -40,7 +40,12 @@ const port = process.env.PORT || 3000;
 const dataDir = path.join(__dirname, 'data');
 
 // Middleware
-app.use(cors());
+// Enable CORS for all origins
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Serve static files from the data directory
