@@ -370,7 +370,7 @@ router.get('/league/:league_id', async (req, res) => {
   const { league_id } = req.params;
   
   try {
-    console.log(`Fetching league with ID: ${league_id}`);
+    // console.log(`Fetching league with ID: ${league_id}`);
     
     const { data, error } = await supabase
       .from('leagues')
@@ -388,7 +388,7 @@ router.get('/league/:league_id', async (req, res) => {
       return res.status(404).json({ error: "League not found" });
     }
 
-    console.log('League data found:', data);
+    // console.log('League data found:', data);
     res.status(200).json(data);
   } catch (error) {
     console.error('Error in /league/:league_id route:', error);

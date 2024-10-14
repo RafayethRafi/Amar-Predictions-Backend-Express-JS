@@ -78,7 +78,7 @@ router.get('/main_background_image', async (req, res) => {
       const heroImage = data[0];
 
       // Log the full Base64 string for debugging purposes
-      console.log('Base64 Image:', heroImage.image);
+      // console.log('Base64 Image:', heroImage.image);
 
       res.json({
         id: heroImage.id,

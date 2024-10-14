@@ -5,7 +5,7 @@ function auth(req, res, next) {
   const authHeader = req.header('Authorization');
   
   // Log the full authHeader to check if it's being sent correctly
-  console.log('Authorization Header:', authHeader);
+  // console.log('Authorization Header:', authHeader);
 
   // Check if Authorization header exists and starts with 'Bearer '
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -16,13 +16,13 @@ function auth(req, res, next) {
   const token = authHeader.split(' ')[1];
   
   // Log the token to check if it was extracted correctly
-  console.log('Received Token:', token);
+  // console.log('Received Token:', token);
 
   try {
     // Verify the token with the secret key
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    console.log('Decoded Token:', decoded); // Log decoded token for debugging
+    // console.log('Decoded Token:', decoded); // Log decoded token for debugging
 
     // Attach the decoded token payload (e.g., user id) to the request object
     req.user = decoded;
