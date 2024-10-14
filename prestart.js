@@ -5,7 +5,7 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY
 
 async function testDatabaseConnection() {
   try {
-    const { data, error } = await supabase.from('your_table_name').select('*').limit(1);
+    const { data, error } = await supabase.from('leagues').select('*').limit(1);
     
     if (error) throw error;
     
